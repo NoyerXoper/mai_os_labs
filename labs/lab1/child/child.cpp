@@ -31,5 +31,4 @@ int main(int argc, char* argv[]) {
         printf("%llu\n", number);
     }
     return 0;
-
 }

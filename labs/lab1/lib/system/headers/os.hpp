@@ -31,8 +31,6 @@ public:
 
 };
 
-//void CreateProcess(const char* path, Pipe pipe, int mode, std::size_t argc, char* const argv[]);
-
 int CreatePipe(Pipe fds);
 
 void WriteToDescriptor(Descriptor d, std::string data);

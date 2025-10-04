@@ -1,7 +1,7 @@
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-#include <string.h>
 
 #include "os.hpp"
 
@@ -60,33 +60,6 @@ void Process::Start() {
         execv(path_.c_str(), GetArgv());
     }
 }
-
-
-
-
-/*
-void CreateProcess(const char* path, Pipe pipe, int mode, std::size_t argc, char* const argv[]){
-    pid_t id = fork();
-    if (id == 0) {
-        // Building new array with same pointers(strings), but +1 size to place NULL at the end.
-        char** proper_argv = new char*[argc+1];
-        for (int i = 0; i < argc; ++i) {
-            proper_argv[i] = argv[i];
-        }
-        proper_argv[argc] = NULL;
-
-        if (mode & CLOSE_READ_PIPE) {
-            CloseDescriptor(pipe[0]);
-        }
-        if (mode & CLOSE_WRITE_PIPE) {
-            CloseDescriptor(pipe[1]);
-       }
-        execv(path, proper_argv);
-        // In case if execv fails
-        exit(1);
-    }
-}
-*/
 
 int CreatePipe(Pipe fd) {
     return pipe(fd);
