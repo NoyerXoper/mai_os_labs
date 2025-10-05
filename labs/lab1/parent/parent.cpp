@@ -13,14 +13,14 @@ int main() {
     printf("Enter the path to the file:");
     scanf("%s", &path);
 
-    //os::Descriptor fd = os::OpenReadFile(path);
     os::Descriptor fd = os::OpenReadFile(path);
-    if (fd == -1) {
+    if (!fd) {
         printf("file didn't open");
         return 1;
     }
 
-    if(os::CreatePipe(pipe) == -1) {
+    pipe.Open();
+    if(!pipe.GetStatus()) {
         printf("pipe didn't open");
         os::CloseDescriptor(fd);
         return 1;
@@ -29,23 +29,23 @@ int main() {
     os::Process child("./build/labs/lab1/child", pipe);
     child.SetPipeMode(CLOSE_READ_PIPE);
     child.stdInDescriptor = fd;
-    child.stdOutDescriptor = pipe[1];
+    child.stdOutDescriptor = pipe.GetWritePipe();
 
     child.Start();
+    os::ProcessID processId = child.GetId();
     
     // right here we are in parent, child is not here anymore
     os::CloseDescriptor(fd);
-    os::CloseDescriptor(pipe[1]);
+    pipe.CloseWrite();
 
     ssize_t bytes_read;
     char buffer[BUFFER_SIZE];
     printf("First positive composite numbers in file:\n");
-    while ((bytes_read = os::ReadToBuffer(pipe[0], buffer, sizeof(buffer)-1)) > 0) {
-        buffer[bytes_read] = '\0';
-        printf(buffer);
-        fflush(stdout);
+    std::string data;
+    while ((data = pipe.Read()).size()) {
+        printf("%s", data.c_str());
     }
-    os::CloseDescriptor(pipe[0]);
-    os::Wait(&status);
+    pipe.CloseRead();
+    os::Wait(&status, processId);
     return 0;
 }
