@@ -157,7 +157,7 @@ Descriptor OpenReadFile(const char* path) {
 }
 
 void Wait(int* status, ProcessID id) {
-    while (id->id != wait(status)) {};
+    waitpid(id->id, status, 0);
 }
 
 bool DidProcessEndSuccessfully(int status) {
