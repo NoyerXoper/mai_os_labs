@@ -1,11 +1,12 @@
 #include <memory>
 #include "matrix.hpp"
 
-Matrix::Matrix(std::size_t width, std::size_t height): Matrix(width, height, 0){}
+Matrix::Matrix(std::size_t width, std::size_t height): width_(width), height_(height) {
+    data_ = new long double[width_ * height_];
+}
 
-Matrix::Matrix(std::size_t width, std::size_t height, long double value): width_(width), height_(height_) {
-    data_ = new long double[width * height];
-    for (std::size_t i = 0; i < width * height; ++i) {
+Matrix::Matrix(std::size_t width, std::size_t height, long double value): Matrix(width, height){
+    for (std::size_t i = 0; i < width_ * height_; ++i) {
         data_[i] = value;
     }
 }
@@ -25,7 +26,8 @@ Matrix::~Matrix() noexcept {
     delete[] data_;
 }
 
-Matrix& Matrix::operator=(const Matrix& other) {
+Matrix& Matrix::operator=
+(const Matrix& other) {
     if (this == &other) {
         return *this;
     }
@@ -45,6 +47,13 @@ Matrix& Matrix::operator=(Matrix&& other) noexcept {
 
 long double* Matrix::operator[](std::size_t i) const {
     return data_ + i * width_;
+}
+
+std::size_t Matrix::GetWidth() const {
+    return width_;
+}
+std::size_t Matrix::GetHeight() const {
+    return height_;
 }
 
 void Matrix::Swap(Matrix& other) {

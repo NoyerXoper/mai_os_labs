@@ -18,6 +18,11 @@ Thread::Thread(Thread&& other) noexcept: function_(other.function_), handle_(oth
     other.handle_ = nullptr;
 }
 
+Thread::~Thread() noexcept {
+    delete handle_;
+}
+
+
 Thread& Thread::operator=(Thread&& other) noexcept {
     if (this == &other) {
         return *this;

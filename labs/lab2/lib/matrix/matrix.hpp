@@ -15,7 +15,10 @@ public:
     Matrix& operator=(Matrix&& other) noexcept;
 
     // returns i'th "row", but trully a pointer data_ + i * width
-    long double* operator[](std::size_t i);
+    long double* operator[](std::size_t i) const;
+
+    std::size_t GetWidth() const;
+    std::size_t GetHeight() const;
 
     void Swap(Matrix& other);
 
@@ -24,9 +27,3 @@ private:
     std::size_t height_;
     long double* data_;
 };
-
-namespace std{
-void swap(Matrix& first, Matrix& second) {
-    first.Swap(second);
-}
-}
