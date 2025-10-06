@@ -5,10 +5,6 @@
 #include "permutations.hpp"
 #include "factorial.hpp"
 
-namespace {
-
-}
-
 Permutation::Permutation(unsigned int size): sign_(1), isFirst_(true), isEnd_(false){
     for (int i = 0; i < size; ++i) {
         data_.push_back(i); 
@@ -37,22 +33,17 @@ Permutation::Permutation(unsigned int size, std::size_t i): Permutation(size){
         data_[k] = selected;
     }
     // Calculating sign
-    std::size_t numOfIndependentCicles = 0;
-    std::vector<bool> usedNumbers(size, false);
+    std::size_t numOfInverses = 0;
     unsigned int temp;
-    // Counting number of independent cicles including cicles length of 1
-    for (unsigned int k = 0; k < size; ++k) {
-        if(!usedNumbers[k]) {
-            temp = k;
-            while (!usedNumbers[temp]) {
-                usedNumbers[temp] = true;
-                temp = data_[temp];
+    // Counting number of inverses
+    for (std::size_t i = 0; i < size; ++i) {
+        for (std::size_t j = i + 1; j < size; ++j) {
+            if (data_[i] > data_[j]) {
+                ++numOfInverses;
             }
-            ++numOfIndependentCicles;
         }
     }
-    // size - numOfIndependentCicles = numOfTranspositons
-    sign_ = (size - numOfIndependentCicles) % 2 == 0 ? 1 : -1;
+    sign_ = numOfInverses % 2 == 0 ? 1 : -1;
 }
 
 char Permutation::Sign() const noexcept{

@@ -34,7 +34,7 @@ void* CalculateParitalDeterminant(void* rawData) {
             val *= matrix[i][permutation[i]];
         }
         writePlace += val;
-    } while(!(start == end));
+    } while(start != end);
     return NULL;
 }
 }
