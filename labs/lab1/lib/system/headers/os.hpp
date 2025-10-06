@@ -55,10 +55,6 @@ public:
 
 };
 
-void WriteToDescriptor(Descriptor d, std::string data);
-
-int ReadToBuffer(Descriptor d, char buffer[], std::size_t size);
-
 void CloseDescriptor(Descriptor& d);
 
 Descriptor OpenReadFile(const char* file_path);
