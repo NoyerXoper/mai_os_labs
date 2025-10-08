@@ -8,12 +8,12 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        std::cerr << "Invalid parameters. Correct use: " << argv[0] << " --num-theads NUM_THREADS";
+        std::cerr << "Invalid parameters. Correct use: " << argv[0] << " --num-threads NUM_THREADS";
         return 1;
     }
     std::string argNumThreads = argv[1];
     if (argNumThreads != "--num-threads") {
-        std::cerr << "Invalid arguments. Correct use: " << argv[0] << " --num-theads NUM_THREADS";
+        std::cerr << "Invalid arguments. Correct use: " << argv[0] << " --num-threads NUM_THREADS";
         return 1;
     }
 

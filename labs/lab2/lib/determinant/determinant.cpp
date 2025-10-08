@@ -40,8 +40,17 @@ void* CalculateParitalDeterminant(void* rawData) {
 }
 
 long double Determinant(const Matrix& matrix, std::size_t numThreads) {
+    if (matrix.GetHeight() != matrix.GetWidth()) {
+        throw std::invalid_argument("Matrix must be square matrix.");
+    }
     // order of matrix
     std::size_t n = matrix.GetWidth();
+    if (n == 1) {
+        return matrix[0][0];
+    }
+    if (n == 2) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
     // thread pool
     std::vector<os::Thread> threads;
     std::size_t numberOfOperands = Factorial(n);
@@ -53,11 +62,8 @@ long double Determinant(const Matrix& matrix, std::size_t numThreads) {
 
     for (std::size_t i = 0; i < numThreads; ++i) {
         threads.emplace_back(CalculateParitalDeterminant);
-        //std::cout << "Created Thread " << i << std::endl;
         dataForThreads.push_back(new ThreadData(matrix, partialDeterminants[i], Permutation(n, batchSize * i), Permutation(n, std::min(batchSize * (i + 1) - 1, numberOfOperands - 1))));
-        //std::cout << "Created ThreadData " << i << std::endl;
         threads.back().Run(reinterpret_cast<void*>(dataForThreads.back()));
-        //std::cout << "Started Thread " << i << std::endl;
     }
 
     for (std::size_t i = 0; i < numThreads; ++i) {
