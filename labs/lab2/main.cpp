@@ -19,11 +19,11 @@ int main(int argc, char* argv[]) {
 
     std::size_t n;
     argNumThreads = argv[2];
-    std::cout << "Enter an order of a matrix (upto 13, or your death will be closer, then the determinant): ";
+    std::cout << "Enter an order of a matrix (upto 12): ";
     std::cin >> n;
     std::size_t numThreads = std::min(std::stoul(argNumThreads), Factorial(n));
 
-    if (n > 13) {
+    if (n > 12) {
         std::cout << "that's too much, I can't handle it.";
         return 1;
     }

@@ -21,20 +21,19 @@ Permutation::Permutation(unsigned int size, std::size_t i): Permutation(size){
     fact /= size;
 
     std::size_t index;
+    unsigned int selected;
     // Calculating permutation
     for (std::size_t k = 0; k < size; ++k) {
         index = k + i / fact;
         i %= fact;
         fact /= std::max(size - k - 1, static_cast<std::size_t>(1));
-        unsigned int selected = data_[index];
+        selected = data_[index];
         for (std::size_t j = index; j > k; --j) {
             data_[j] = data_[j - 1];
         }
         data_[k] = selected;
     }
-    // Calculating sign
     std::size_t numOfInverses = 0;
-    unsigned int temp;
     // Counting number of inverses
     for (std::size_t i = 0; i < size; ++i) {
         for (std::size_t j = i + 1; j < size; ++j) {
@@ -43,6 +42,7 @@ Permutation::Permutation(unsigned int size, std::size_t i): Permutation(size){
             }
         }
     }
+    // Calculating sign
     sign_ = numOfInverses % 2 == 0 ? 1 : -1;
 }
 
@@ -55,7 +55,7 @@ const std::vector<unsigned int>& Permutation::GetCurrent() const noexcept {
 }
 
 const std::vector<unsigned int>& Permutation::GenerateNext() {
-    if (isFirst_) {
+    if (isEnd_ || isFirst_) {
         isFirst_ = false;
         return data_;
     }
@@ -90,5 +90,5 @@ bool operator==(const Permutation& first, const Permutation& second) noexcept {
     return first.data_ == second.data_;
 }
 bool operator!=(const Permutation& first, const Permutation& second) noexcept {
-    return !(first == second);
+    return first.data_ != second.data_;
 }
