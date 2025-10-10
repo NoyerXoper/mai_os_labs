@@ -1,4 +1,5 @@
 #include <memory>
+
 #include "matrix.hpp"
 
 Matrix::Matrix(std::size_t width, std::size_t height): width_(width), height_(height) {
@@ -26,8 +27,7 @@ Matrix::~Matrix() noexcept {
     delete[] data_;
 }
 
-Matrix& Matrix::operator=
-(const Matrix& other) {
+Matrix& Matrix::operator=(const Matrix& other) {
     if (this == &other) {
         return *this;
     }

@@ -15,7 +15,7 @@ Thread::Thread(void_func func): function_(func) {
 }
 
 Thread::Thread(Thread&& other) noexcept: function_(other.function_), handle_(other.handle_) {
-    function_ = nullptr;
+    other.function_ = nullptr;
     other.handle_ = nullptr;
 }
 
@@ -34,7 +34,7 @@ Thread& Thread::operator=(Thread&& other) noexcept {
 }
 
 void Thread::Run(void* data) {
-    int res = pthread_create(&(handle_->thread), NULL, function_, data) == 0;
+    int res = pthread_create(&(handle_->thread), NULL, function_, data);
     if (res != 0) {
         throw std::system_error(res, std::system_category(), "pthread_create failed");
     }

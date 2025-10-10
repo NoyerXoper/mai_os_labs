@@ -1,7 +1,6 @@
 #include <string.h>
 #include <vector>
-
-#include <iostream>
+#include <stdexcept>
 
 #include "determinant.hpp"
 #include "threads.hpp"
@@ -11,7 +10,7 @@
 
 namespace {
 struct ThreadData {
-    ThreadData(const Matrix& matrix, long double& writePlace, const Permutation& start, const Permutation& end): matrix(matrix), writePlace(writePlace), start(start), end(end) {
+    ThreadData(const Matrix& matrix, long double& writePlace, const Permutation& start, const Permutation& end): matrix(matrix), writePlace(writePlace), start(std::move(start)), end(std::move(end)) {
         this->start.ResetFirst();
     }
     const Matrix& matrix;
@@ -58,21 +57,21 @@ long double Determinant(const Matrix& matrix, std::size_t numThreads) {
     std::size_t batchSize = numberOfOperands / numThreads;
     // threads will output here
     std::vector<long double> partialDeterminants(numThreads, 0);
-    std::vector<ThreadData*> dataForThreads;
+    std::vector<ThreadData> dataForThreads;
+
+    threads.reserve(numThreads);
+    dataForThreads.reserve(numThreads);
 
     for (std::size_t i = 0; i < numThreads; ++i) {
         threads.emplace_back(CalculateParitalDeterminant);
-        dataForThreads.push_back(new ThreadData(matrix, partialDeterminants[i], Permutation(n, batchSize * i), Permutation(n, std::min(batchSize * (i + 1) - 1, numberOfOperands - 1))));
-        threads.back().Run(reinterpret_cast<void*>(dataForThreads.back()));
+        dataForThreads.emplace_back(matrix, partialDeterminants[i], Permutation(n, batchSize * i), Permutation(n, std::min(batchSize * (i + 1) - 1, numberOfOperands - 1)));
+        threads[i].Run(&dataForThreads[i]);
     }
 
     for (std::size_t i = 0; i < numThreads; ++i) {
         threads[i].Join();
     }
 
-    for (ThreadData* dat: dataForThreads) {
-        delete dat;
-    }
 
     long double determinant = 0;
     for (long double partial: partialDeterminants) {
