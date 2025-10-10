@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <utility>
+#include <system_error>
 
 #include "threads.hpp"
 
@@ -32,12 +33,18 @@ Thread& Thread::operator=(Thread&& other) noexcept {
     return *this;
 }
 
-bool Thread::Run(void* data) {
-    return pthread_create(&(handle_->thread), NULL, function_, data) == 0;
+void Thread::Run(void* data) {
+    int res = pthread_create(&(handle_->thread), NULL, function_, data) == 0;
+    if (res != 0) {
+        throw std::system_error(res, std::system_category(), "pthread_create failed");
+    }
 }
 
 void Thread::Join() {
-    pthread_join(handle_->thread, NULL);
+    int res = pthread_join(handle_->thread, NULL);
+    if (res != 0) {
+        throw std::system_error(res, std::system_category(), "pthread_join failed");
+    }
 }
 
 void Thread::Swap(Thread& other) {

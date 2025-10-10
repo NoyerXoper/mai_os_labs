@@ -16,7 +16,7 @@ public:
 
     void Swap(Thread& other);
 
-    bool Run(void* data);
+    void Run(void* data);
     void Join();
 
     ~Thread() noexcept;
