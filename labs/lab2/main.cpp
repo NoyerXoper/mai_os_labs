@@ -5,6 +5,8 @@
 #include "determinant.hpp"
 #include "factorial.hpp"
 
+constexpr std::size_t order_limit = 15;
+
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -19,11 +21,11 @@ int main(int argc, char* argv[]) {
 
     std::size_t n;
     argNumThreads = argv[2];
-    std::cout << "Enter an order of a matrix (upto 12): ";
+    std::cout << "Enter an order of a matrix (upto " << order_limit << "): ";
     std::cin >> n;
     std::size_t numThreads = std::min(std::stoul(argNumThreads), Factorial(n));
 
-    if (n > 12) {
+    if (n > order_limit) {
         std::cout << "that's too much, I can't handle it.";
         return 1;
     }
