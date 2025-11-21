@@ -214,17 +214,13 @@ Process::~Process() noexcept {
 }
 
 Descriptor OpenReadFile(std::string_view path) {
-    try {
-        int descriptor = open(path.data(), O_RDONLY);
-        if (descriptor == -1) {
-            return nullptr;
-        }
-        Descriptor de = new FileDummy();
-        de->descriptor = descriptor;
-        return de;
-    } catch(const std::bad_alloc& exc) {
-        return nullptr;
+    int descriptor = open(path.data(), O_RDONLY);
+    if (descriptor == -1) {
+        throw exceptions::SystemError(errno, "Couldn't open file");
     }
+    Descriptor de = new FileDummy();
+    de->descriptor = descriptor;
+    return de;
 }
 
 void CloseDescriptor(Descriptor desc) {

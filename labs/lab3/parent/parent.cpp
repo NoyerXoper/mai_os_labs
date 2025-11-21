@@ -14,11 +14,6 @@ int main() {
     std::getline(std::cin, path);
 
     os::Descriptor fd = os::OpenReadFile(path);
-    if (!fd) {
-        std::cerr << "file didn't open\n";
-        return 1;
-    }
-
     std::string_view shared_memory_name = "lab3_shared_memory";
 
     shared_queue::ReadingEndSharedQueue<int, 512> shared_memory(shared_memory_name);
@@ -34,7 +29,7 @@ int main() {
 
     printf("First positive composite numbers in file:\n");
     while(shared_memory.AreProducersWorking() || shared_memory.Size() > 0) {
-        std::cout << shared_memory.Front() << std::endl;
+        std::cout << shared_memory.Front() << '\n';
         shared_memory.PopFront();
     }
     os::Wait(&status, processId);
