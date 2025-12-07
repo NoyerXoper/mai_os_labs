@@ -1,14 +1,14 @@
 #include "translation.hpp"
 
-#include <string>
-#include <sstream>
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+#include <sstream>
+#include <string>
 
 extern "C" {
 char* translate(long number) {
     std::stringstream ss;
-    bool is_negative = number < 0; 
+    bool is_negative = number < 0;
     number = std::abs(number);
     int size = 0;
 
@@ -23,7 +23,12 @@ char* translate(long number) {
         ++size;
     }
 
-    char* translated = new char[size+1];
+    char* translated = new char[std::max(2, size + 1)];
+    if (size == 0) {
+        translated[0] = '0';
+        translated[1] = 0;
+        return translated;
+    }
     translated[size] = 0;
     for (int i = size - 1; i >= 0; --i) {
         ss >> translated[i];

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace sys{
+namespace sys {
 struct ModuleDummy;
 using Module = std::unique_ptr<ModuleDummy>;
 
@@ -19,8 +19,8 @@ public:
     FuncTypePtr GetSymbol(std::string_view symbol);
     Module lib;
 };
-}
+}  // namespace sys
 
 #ifdef __linux__
-#include <library_loader_unix.ipp>
+#    include <library_loader_unix.ipp>
 #endif
