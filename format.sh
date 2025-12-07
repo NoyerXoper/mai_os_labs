@@ -1,1 +1,0 @@
-find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.ipp" | xargs clang-format -i
